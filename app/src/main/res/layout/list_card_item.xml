@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linear_list_card_item"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    app:stackHeaderHeight="100dp">
+
+    <FrameLayout
+        android:id="@+id/frame_list_card_item"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:background="@drawable/shape_rectangle_with_radius">
+
+        <TextView
+            android:id="@+id/text_list_card_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:textColor="@android:color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            tools:text="12"/>
+
+        <ImageView
+            android:id="@+id/iv_edit"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:layout_gravity="right"
+            android:layout_margin="8dp"
+            app:srcCompat="@mipmap/ic_brush"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="30dp"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingRight="10dp">
+
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    android:text="关键字："
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@color/white"/>
+
+                <EditText
+                    android:id="@+id/edt_item_key"
+                    android:layout_width="fill_parent"
+                    android:layout_height="45dip"
+                    android:enabled="false"
+                    android:focusable="true"
+                    android:gravity="center_vertical"
+                    android:hint="关键字，例如：QQ,q,qq"
+                    android:minHeight="45dp"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="2dp"
+                    android:singleLine="false"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/white"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingRight="10dp">
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    android:text="帐号："
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@color/white"/>
+
+                <EditText
+                    android:id="@+id/edt_item_account"
+                    android:layout_width="fill_parent"
+                    android:layout_height="45dip"
+                    android:enabled="false"
+                    android:focusable="true"
+                    android:gravity="center_vertical"
+                    android:hint="账号"
+                    android:minHeight="45dp"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="2dp"
+                    android:singleLine="false"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/white"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingRight="10dp">
+
+                <TextView
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    android:text="昵称："
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@color/white"/>
+
+                <EditText
+                    android:id="@+id/edt_item_nicname"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dip"
+                    android:enabled="false"
+                    android:focusable="true"
+                    android:gravity="center_vertical"
+                    android:hint="昵称"
+                    android:minHeight="45dp"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="2dp"
+                    android:singleLine="false"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/white"/>
+            </LinearLayout>
+
+        </LinearLayout>
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/container_list_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:animateLayoutChanges="true"
+        >
+
+        <com.aaron.passwordlist.view.AbOuterScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/shape_rectangle_with_radius_white">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="20dp"
+                android:orientation="vertical"
+                android:padding="10dp">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:paddingRight="10dp">
+
+                    <TextView
+                        android:id="@+id/textView3"
+                        android:layout_width="80dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="right"
+                        android:text="密码："
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="#424242"/>
+
+                    <com.aaron.passwordlist.view.MyEditText
+                        android:id="@+id/myedit"
+                        android:layout_width="match_parent"
+                        android:layout_height="45dip"
+                        android:background="@drawable/txtview_border"
+                        android:ellipsize="end"
+                        android:enabled="false"
+                        android:hint="密码点击可见"
+                        android:inputType="textPassword"
+                        android:paddingLeft="20dp"
+                        android:paddingRight="2dp"
+                        android:textColor="#424242"
+                        android:textColorHint="#8e8e8e">
+
+                    </com.aaron.passwordlist.view.MyEditText>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:gravity="top"
+                    android:orientation="vertical"
+                    android:paddingRight="10dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="80dp"
+                            android:layout_height="wrap_content"
+                            android:gravity="right"
+                            android:text="备注："
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:textColor="#424242"/>
+
+                    </LinearLayout>
+
+                    <EditText
+                        android:id="@+id/edt_item_tip"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/txtview_border"
+                        android:enabled="false"
+                        android:focusable="true"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="20dp"
+                        android:paddingRight="2dp"
+                        android:singleLine="false"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="#424242"
+                        android:textColorHint="#8e8e8e"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/btn_selector"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <Button
+                        android:id="@+id/btn_OK"
+                        android:layout_width="38dp"
+                        android:layout_height="38dp"
+                        android:background="@mipmap/ic_right"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                        android:visibility="visible"/>
+
+                    <Button
+                        android:id="@+id/btn_chg_cancel"
+                        android:layout_width="38dp"
+                        android:layout_height="38dp"
+                        android:layout_marginLeft="16dp"
+                        android:background="@mipmap/ic_cancel"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                        android:visibility="visible"/>
+
+                    <Button
+                        android:id="@+id/btn_del"
+                        android:layout_width="38dp"
+                        android:layout_height="38dp"
+                        android:layout_marginLeft="16dp"
+                        android:background="@mipmap/ic_del"/>
+                </LinearLayout>
+
+            </LinearLayout>
+        </com.aaron.passwordlist.view.AbOuterScrollView>
+    </LinearLayout>
+
+</LinearLayout>

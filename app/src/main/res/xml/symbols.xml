@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Keyboard android:keyWidth="10.000002%p" android:keyHeight="@dimen/key_height" android:horizontalGap="0.0px" android:verticalGap="0.0px"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <Row>
+        <Key android:keyWidth="20.000004%p" android:codes="49" android:keyEdgeFlags="left" android:keyLabel="1" />
+        <Key android:keyWidth="20.000004%p" android:codes="57" android:keyLabel="9" />
+        <Key android:keyWidth="20.000004%p" android:codes="53" android:keyLabel="5" />
+        <Key android:keyWidth="20.000004%p" android:codes="48" android:keyLabel="0" />
+        <Key android:keyWidth="20.000004%p" android:codes="-5" android:keyEdgeFlags="right" android:isRepeatable="true" android:keyIcon="@drawable/keyboard_delete" />
+
+    </Row>
+    <Row>
+        <Key android:keyWidth="20.000004%p" android:codes="52" android:keyEdgeFlags="left" android:keyLabel="4" />
+        <Key android:keyWidth="20.000004%p" android:codes="51" android:keyLabel="3" />
+        <Key android:keyWidth="20.000004%p" android:codes="54" android:keyLabel="6" />
+        <Key android:keyWidth="40.000004%p" android:codes="-2" android:keyEdgeFlags="right" android:keyLabel="ABC" />
+    </Row>
+    <Row>
+        <Key android:keyWidth="20.000004%p" android:codes="56" android:keyEdgeFlags="left" android:keyLabel="8" />
+        <Key android:keyWidth="20.000004%p" android:codes="50" android:keyLabel="2" />
+        <Key android:keyWidth="20.000004%p" android:codes="55" android:keyLabel="7" />
+        <Key android:keyWidth="40.000004%p" android:codes="-3" android:keyEdgeFlags="right" android:keyLabel="完成" />
+    </Row>
+</Keyboard>

@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay"/>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|center_horizontal"
+        android:orientation="vertical"
+        android:padding="16dp">
+        <EditText
+            android:id="@+id/edt_keyword"
+            android:layout_width="match_parent"
+            android:layout_height="45dip"
+            android:background="@drawable/txtview_border"
+            android:gravity="center_vertical"
+            android:hint="请输入关键字，例如：QQ,q,qq"
+            android:paddingLeft="20dp"
+            android:paddingRight="2dp"
+            android:singleLine="true"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="#424242"
+            android:textColorHint="#8e8e8e"/>
+
+
+
+            <EditText
+                android:id="@+id/edt_account"
+                android:layout_width="match_parent"
+                android:layout_height="45dip"
+                android:background="@drawable/txtview_border"
+                android:gravity="center_vertical"
+                android:hint="请输入账号"
+                android:paddingLeft="20dp"
+                android:paddingRight="2dp"
+                android:singleLine="true"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="#424242"
+                android:textColorHint="#8e8e8e"/>
+
+
+
+            <EditText
+                android:id="@+id/edt_nicname"
+                android:layout_width="match_parent"
+                android:layout_height="45dip"
+                android:background="@drawable/txtview_border"
+                android:gravity="center_vertical"
+                android:hint="请输入昵称（没有可以空白）"
+                android:paddingLeft="20dp"
+                android:paddingRight="2dp"
+                android:singleLine="true"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="#424242"
+                android:textColorHint="#8e8e8e"/>
+
+
+
+            <EditText
+                android:id="@+id/edt_password"
+                android:layout_width="match_parent"
+                android:layout_height="45dip"
+                android:background="@drawable/txtview_border"
+                android:gravity="center_vertical"
+                android:hint="请输入密码"
+                android:paddingLeft="20dp"
+                android:paddingRight="2dp"
+                android:singleLine="true"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="#424242"
+                android:textColorHint="#8e8e8e"/>
+
+
+
+            <EditText
+                android:id="@+id/edt_tip"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/txtview_border"
+                android:gravity="left|center"
+                android:hint="备注"
+                android:maxHeight="100dp"
+                android:minHeight="45dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="2dp"
+                android:singleLine="false"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="#424242"
+                android:textColorHint="#8e8e8e"/>
+
+
+        <TextView
+            android:id="@+id/textView13"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="10dp"
+            android:text="注意：关键字有利于后期的查找，关键字之间使用逗号隔开。"
+            android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+        <Button
+            android:id="@+id/btn_add"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/btn_onclick_bg"
+            android:text="添加"
+            android:textColor="#ffffff"/>
+    </LinearLayout>
+</android.support.design.widget.CoordinatorLayout>
