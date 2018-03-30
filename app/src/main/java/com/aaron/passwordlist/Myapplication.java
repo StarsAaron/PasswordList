@@ -2,17 +2,10 @@ package com.aaron.passwordlist;
 
 import android.app.Application;
 
-/**
- *
- * Created by Aaron on 2015/6/30.
- */
 public class Myapplication extends Application {
-    private static String password  = "";
-
-    private static final String decryptType = "AES";
-
-    public Myapplication() {
-    }
+    private static final String decryptType = "AES";  // 加密类型
+    private static String password  = "";             // 密码
+    private static int userId;                        // 当前用户ID
 
     @Override
     public void onCreate() {
@@ -24,8 +17,16 @@ public class Myapplication extends Application {
         this.password = password;
     }
 
-    public static String getPassWord (){
+    public static String getPassWord(){
         return password;
+    }
+
+    public static int getUserId() {
+        return userId;
+    }
+
+    public static void setUserId(int userId) {
+        Myapplication.userId = userId;
     }
 
     public static String getDecryptType() {

@@ -8,13 +8,18 @@ import android.database.sqlite.SQLiteOpenHelper;
  * Created by stars on 2015/7/26.
  */
 public class UserDBOpenHelper extends SQLiteOpenHelper {
-    public UserDBOpenHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
-        super(context, name, factory, version);
+    public UserDBOpenHelper(Context context, String dbName, SQLiteDatabase.CursorFactory factory, int dbVersion) {
+        super(context, dbName, factory, dbVersion);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("create table user(_id integer primary key autoincrement,password varchar(20),email varchar(20))");
+        // 创建用户列表
+        db.execSQL("create table user(" +
+                "userId integer primary key autoincrement," +
+                "userName varchar(10)," +
+                "userPassword varchar(20)" +
+                ")");
     }
 
     @Override

@@ -6,35 +6,42 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
+import com.aaron.keyboardlibrary.KeyboardTouchListener;
+import com.aaron.keyboardlibrary.KeyboardUtil;
 import com.aaron.passwordlist.Myapplication;
 import com.aaron.passwordlist.R;
+import com.aaron.passwordlist.bean.UserBean;
 import com.aaron.passwordlist.db.dao.UserDao;
-import com.aaron.passwordlist.util.KeyboardUtil;
-import com.aaron.passwordlist.util.Md5Util;
 
 /**
  * 登录页面
  */
 public class LoginActivity extends Activity implements View.OnClickListener {
-    private Button btn_login,btn_finger;  // 按钮
+    private Button btn_login, btn_finger;  // 按钮
     private EditText edt_login_password;  // 密码输入框
     private UserDao userDao = null;       // 用户信息
     private Myapplication myapplication;
+    private KeyboardUtil keyboardUtil;
+    private LinearLayout rootView;
+    private ScrollView scrollView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-//        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);//关闭系统默认输入法
         myapplication = (Myapplication) getApplication();
         initView();
-        initData();
+        initMoveKeyBoard();
+        isHadRegist();
     }
 
     /**
@@ -45,25 +52,42 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         btn_login = (Button) findViewById(R.id.btn_login);
         btn_finger = (Button) findViewById(R.id.btn_finger);
 
-//        edt_login_password.setInputType(InputType.TYPE_TEXT_VARIATION_WEB_PASSWORD);//设置输入法为空
-        edt_login_password.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                new KeyboardUtil(LoginActivity.this, LoginActivity.this, edt_login_password).showKeyboard();
-                return true;
-            }
-        });
         btn_login.setOnClickListener(this);
         btn_finger.setOnClickListener(this);
+
+        rootView = (LinearLayout) findViewById(R.id.rootView);
+        scrollView = (ScrollView) findViewById(R.id.sv_main);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+            if (keyboardUtil.isShow) {
+                keyboardUtil.hideSystemKeyBoard();
+                keyboardUtil.hideAllKeyBoard();
+                keyboardUtil.hideKeyboardLayout();
+            } else {
+                return super.onKeyDown(keyCode, event);
+            }
+
+            return false;
+        } else
+            return super.onKeyDown(keyCode, event);
+    }
+
+    private void initMoveKeyBoard() {
+        keyboardUtil = new KeyboardUtil(this, rootView, scrollView);
+        edt_login_password.setOnTouchListener(new KeyboardTouchListener(keyboardUtil
+                , KeyboardUtil.INPUTTYPE_ABC, -1));
     }
 
     /**
      * 初始化页面显示数据
      */
-    private void initData() {
+    private void isHadRegist() {
         userDao = new UserDao(LoginActivity.this);
-        if(!userDao.anyoneExit()){
-            Intent intent = new Intent(LoginActivity.this,RegistActivity.class);
+        if (!userDao.anyoneExist()) {
+            Intent intent = new Intent(LoginActivity.this, RegistActivity.class);
             startActivity(intent);
             finish();
         }
@@ -75,21 +99,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
             case R.id.btn_login:
                 String pass = edt_login_password.getText().toString().trim();
                 if (checkInput(pass)) {
-                    if (userDao.checkUser(LoginActivity.this, Md5Util.md5Arithmetic(Md5Util.md5Arithmetic(pass)))) {
-                        Toast.makeText(LoginActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
-
-                        // 保存数据
-                        myapplication.setPassword(pass);//临时保存
-                        SharedPreferences sp = getSharedPreferences("msg", Context.MODE_PRIVATE);
-                        sp.edit().putString("pass", pass).commit();
-
-                        // 跳转到主页
-                        Intent intent = new Intent(LoginActivity.this,MainActivity.class);
-                        startActivity(intent);
-                        finish();
-                    } else {
-                        edt_login_password.setError("密码错误");
-                    }
+                    checkUserPassword();
                 }
                 break;
             case R.id.btn_finger:
@@ -98,46 +108,69 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         }
     }
 
+    private void checkUserPassword() {
+        String pass = edt_login_password.getText().toString().trim();
+        UserBean userBean = new UserBean();
+        userBean.userName = "admin";
+        userBean.userPassword = pass;
+        if (userDao.checkUserMessage(userBean)) {
+            toast("登录成功");
+            saveTempData(pass);
+            jumpToMainActivity();
+        } else {
+            edt_login_password.setError("密码错误");
+        }
+    }
+
+    private void saveTempData(String pass) {
+        myapplication.setPassword(pass);//临时保存
+        SharedPreferences sp = getSharedPreferences("msg", Context.MODE_PRIVATE);
+        sp.edit().putString("pass", pass).commit();
+    }
+
     /**
      * 显示按指纹对话框
      */
-    private void showFragmentDialog(){
+    private void showFragmentDialog() {
         FingerDialogFragment fingerDialogFragment = new FingerDialogFragment();
         fingerDialogFragment.show(getFragmentManager(), "fingerFragment");
         fingerDialogFragment.setmFragmentCallBack(new FingerDialogFragment.Callback() {
             @Override
             public void onSuccess() {
                 SharedPreferences sp = getSharedPreferences("msg", Context.MODE_PRIVATE);
-                String pass = sp.getString("pass","");
+                String pass = sp.getString("pass", "");
 
-                if(!TextUtils.isEmpty(pass)){
+                if (!TextUtils.isEmpty(pass)) {
                     myapplication.setPassword(pass);//临时保存
-                    Toast.makeText(LoginActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(LoginActivity.this,MainActivity.class);
-                    startActivity(intent);
-                    finish();
-                }else{
-                    Toast.makeText(LoginActivity.this, "获取不到本地数据，请使用密码登录", Toast.LENGTH_SHORT).show();
+                    toast("登录成功");
+                    jumpToMainActivity();
+                } else {
+                    toast("获取不到本地数据，请使用密码登录");
                 }
             }
 
             @Override
             public void onError() {
-                Toast.makeText(LoginActivity.this, "成功", Toast.LENGTH_SHORT).show();
+                toast("成功");
             }
         });
     }
 
-    /**
-     * 检查输入数据
-     * @param password
-     * @return
-     */
+    private void jumpToMainActivity() {
+        Intent intent = new Intent(LoginActivity.this, ShowActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
     private boolean checkInput(String password) {
         if (TextUtils.isEmpty(password)) {
-            Toast.makeText(LoginActivity.this, "密码不能为空", Toast.LENGTH_SHORT).show();
+            toast("密码不能为空");
             return false;
         }
         return true;
+    }
+
+    private void toast(String message) {
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
 }

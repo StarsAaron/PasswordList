@@ -9,15 +9,16 @@ import java.security.MessageDigest;
  * @return
  */
 public class Md5Util {
+	private static final String profix = "SdwWWEQEDSaaa132";
+
 	public static String md5Arithmetic(String str) {
 		MessageDigest md5 = null;
 		try {
 			md5 = MessageDigest.getInstance("MD5");
 		} catch (Exception e) {
 			e.printStackTrace();
-			return "";
 		}
-
+		str += profix;
 		char[] charArray = str.toCharArray();
 		byte[] byteArray = new byte[charArray.length];
 

@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+
 def releaseTime() {
     return new Date().format("yyyy_MM_dd", TimeZone.getTimeZone("UTC"))
 }
@@ -10,8 +11,8 @@ android {
         applicationId "com.aaron.passwordlist"
         minSdkVersion 16
         targetSdkVersion 27
-        versionCode 1
-        versionName "1.2"
+        versionCode 2
+        versionName "2.0"
     }
     buildTypes {
         release {
@@ -40,12 +41,14 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
-    //堆叠卡片
-    implementation 'com.loopeer.library:cardstack:1.0.2'
     implementation project(':lfilepickerlibrary')
-    implementation 'com.nineoldandroids:library:2.4.0'
     implementation 'com.github.sd6352051.niftydialogeffects:niftydialogeffects:1.0.0@aar'
     implementation 'com.xuelianx.finger:fingerlib:1.0.1'
     implementation 'com.android.support:appcompat-v7:27.1.0'
     implementation 'com.android.support:design:27.1.0'
+    implementation 'com.android.support:cardview-v7:27.1.0'
+    implementation 'com.ms-square:expandableTextView:0.1.4'
+    implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.30'
+    implementation 'com.nineoldandroids:library:2.4.0'
+    implementation project(':keyboardlibrary')
 }
