@@ -64,9 +64,10 @@
             <android.support.design.widget.TextInputEditText
                 android:id="@+id/edit_tip"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="wrap_content"
                 android:background="@drawable/txtview_border"
                 android:hint="备注"
+                android:minLines="8"
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp" />
         </android.support.design.widget.TextInputLayout>

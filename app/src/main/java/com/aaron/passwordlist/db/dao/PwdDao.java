@@ -50,6 +50,27 @@ public class PwdDao {
         return rowsAffectedResult;
     }
 
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    public void addPasswordMessages(@NonNull List<PasswordBean> passwordBeans) {
+        SQLiteDatabase db = pwdDBOpenHelper.getWritableDatabase();
+        try{
+            db.beginTransaction();
+            for(PasswordBean passwordBean:passwordBeans){
+                ContentValues values = new ContentValues();
+                values.put("pwdkeyword", passwordBean.pwdkeyword);
+                values.put("pwdAccount", passwordBean.pwdAccount);
+                values.put("pwdtip", encryptData(passwordBean.pwdTip));
+                values.put("userKey", passwordBean.userKey);
+                db.insert("password", null, values);
+            }
+            db.setTransactionSuccessful(); //事务已经执行成功
+        }catch(Exception e){
+            e.printStackTrace();
+        }finally {
+            db.endTransaction();
+        }
+    }
+
     public List<PasswordBean> getPasswordMessage(@NonNull String userId) {
         return getPasswordMessage(userId, null);
     }

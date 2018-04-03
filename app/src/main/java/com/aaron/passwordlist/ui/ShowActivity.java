@@ -23,7 +23,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.aaron.passwordlist.MyConstant;
 import com.aaron.passwordlist.Myapplication;
 import com.aaron.passwordlist.R;
 import com.aaron.passwordlist.bean.PasswordBean;
@@ -34,10 +33,12 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.gitonway.lee.niftymodaldialogeffects.lib.Effectstype;
 import com.gitonway.lee.niftymodaldialogeffects.lib.NiftyDialogBuilder;
+import com.google.gson.Gson;
 import com.leon.lfilepickerlibrary.LFilePicker;
 import com.leon.lfilepickerlibrary.utils.Constant;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.aaron.passwordlist.MyConstant.dialogContentBgColor;
@@ -50,9 +51,9 @@ public class ShowActivity extends AppCompatActivity {
     private String keyWork = "";                           //搜索关键字
     private PwdDao pwdDao;
     private List<PasswordBean> passwordBeans;
-    private View emptyView;
     private RecyclerView recycleView;
     private BaseQuickAdapter baseQuickAdapter;
+    private List<Integer> openEyeList = new ArrayList<>();
 
     private class MyHandler extends Handler {
         @Override
@@ -60,6 +61,7 @@ public class ShowActivity extends AppCompatActivity {
             switch (msg.what) {
                 case 0x100:
                     getDataFromDb("");
+                    setRecycleViewAdapter();
                     break;
                 case 0x101:
                 case 0x102:
@@ -67,6 +69,7 @@ public class ShowActivity extends AppCompatActivity {
                     break;
                 case 0x103:
                     getDataFromDb((String) msg.obj);
+                    setRecycleViewAdapter();
                     break;
             }
         }
@@ -87,6 +90,7 @@ public class ShowActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         getDataFromDb(keyWork);
+        setRecycleViewAdapter();
     }
 
     private void initView() {
@@ -102,7 +106,6 @@ public class ShowActivity extends AppCompatActivity {
             }
         });
 
-        emptyView = findViewById(R.id.empty_view);
         recycleView = findViewById(R.id.recycleView);
     }
 
@@ -117,8 +120,7 @@ public class ShowActivity extends AppCompatActivity {
             pwdDao = new PwdDao(getApplicationContext());
         }
         String userId = String.valueOf(Myapplication.getUserId());
-        passwordBeans = pwdDao.getPasswordMessage(userId,key);
-        setRecycleViewAdapter();
+        passwordBeans = pwdDao.getPasswordMessage(userId, key);
     }
 
     private void setRecycleViewAdapter() {
@@ -130,21 +132,25 @@ public class ShowActivity extends AppCompatActivity {
             protected void convert(BaseViewHolder helper, PasswordBean item) {
                 helper.setText(R.id.tv_item_account, item.pwdAccount);
                 helper.setText(R.id.tv_item_tip, item.pwdTip);
-                helper.addOnClickListener(R.id.imgbtn_edit);
+                helper.addOnClickListener(R.id.right_menu_1);
+                helper.addOnClickListener(R.id.right_menu_2);
             }
         };
         baseQuickAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-                EditActivity.jumpToEditActivity(ShowActivity.this,passwordBeans.get(position));
+                switch (view.getId()) {
+                    case R.id.right_menu_1:
+                        EditActivity.jumpToEditActivity(ShowActivity.this, passwordBeans.get(position));
+                        break;
+                    case R.id.right_menu_2:
+                        showDeleteItemDialog(position);
+                        break;
+                }
             }
         });
         recycleView.setAdapter(baseQuickAdapter);
-        baseQuickAdapter.setEmptyView(LayoutInflater.from(this).inflate(R.layout.emptyview,null));
-    }
-
-    private void jumpToEditActivity(){
-
+        baseQuickAdapter.setEmptyView(LayoutInflater.from(this).inflate(R.layout.emptyview, null));
     }
 
     @Override
@@ -284,12 +290,48 @@ public class ShowActivity extends AppCompatActivity {
                 .show();
     }
 
+    private void showDeleteItemDialog(final int position){
+        final NiftyDialogBuilder dialogBuilder = NiftyDialogBuilder.getInstance(ShowActivity.this);
+        dialogBuilder
+                .withTitle("Tip")
+                .withMessage("确定要删除记录吗?")
+                .withDialogColor(dialogContentBgColor)
+                .withTitleColor(dialogTitleBarColor)
+                .withDividerColor("#11000000")
+                .withMessageColor("#FFFFFFFF")
+                .withEffect(Effectstype.Fadein)
+                .withButton1Text("确定")
+                .setButton1Click(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        PwdDao pwdDao = new PwdDao(ShowActivity.this);
+                        PasswordBean passwordBean = (PasswordBean)baseQuickAdapter.getItem(position);
+                        int result = pwdDao.deletePasswordMessageById(passwordBean.pwdId);
+                        if(result > 0){
+                            baseQuickAdapter.remove(position);
+                            baseQuickAdapter.notifyDataSetChanged();
+                            toast("删除成功");
+                        }else{
+                            toast("删除失败");
+                        }
+                        dialogBuilder.dismiss();
+                    }
+                })
+                .withButton2Text("取消")
+                .setButton2Click(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialogBuilder.dismiss();
+                    }
+                }).show();
+    }
+
     private int dp2px(final float dpValue) {
         final float scale = getResources().getDisplayMetrics().density;
         return (int) (dpValue * scale + 0.5f);
     }
 
-    private String provideFileName(){
+    private String provideFileName() {
         return "密码管理器_" + DateUtils.getDateDayTime2(System.currentTimeMillis());
     }
 
@@ -297,13 +339,27 @@ public class ShowActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                FileUtil fileUtil = new FileUtil(getApplicationContext());
-                final boolean result = fileUtil.backupDatabase(MyConstant.PW_DBName
-                        , filePath + File.separator + provideFileName());
+                // 整个数据库备份
+//                FileUtil fileUtil = new FileUtil(getApplicationContext());
+//                final boolean result = fileUtil.backupDatabase(MyConstant.PW_DBName
+//                        , filePath + File.separator + provideFileName());
+
+                // 把数据保存为JSON字符串
+                getDataFromDb("");
+                boolean result = false;
+                if (passwordBeans != null) {
+                    Gson gson = new Gson();
+                    String gsonData = gson.toJson(passwordBeans);
+                    FileUtil fileUtil = new FileUtil(getApplicationContext());
+                    result = fileUtil.backupDatabase2jsonFile(gsonData
+                            , filePath + File.separator + provideFileName());
+                }
+
+                final boolean finalResult = result;
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if (result) {
+                        if (finalResult) {
                             toast("备份成功！");
                         } else {
                             toast("备份失败！");
@@ -335,11 +391,18 @@ public class ShowActivity extends AppCompatActivity {
                                 FileUtil fileUtil = new FileUtil(getApplicationContext());
                                 String resultMessage;
                                 if (file.exists()) {
-                                    if (fileUtil.restoteDatabase(MyConstant.PW_DBName, filePath)) {
+                                    // 从文件中读取JSON加密数据还原到数据库
+                                    if (fileUtil.restoteDataFromJsonFile(ShowActivity.this, filePath)) {
                                         resultMessage = "恢复成功！";
                                     } else {
                                         resultMessage = "恢复失败！";
                                     }
+                                    // 直接复制数据库
+//                                    if (fileUtil.restoteDatabase(MyConstant.PW_DBName, filePath)) {
+//                                        resultMessage = "恢复成功！";
+//                                    } else {
+//                                        resultMessage = "恢复失败！";
+//                                    }
                                 } else {
                                     resultMessage = "恢复失败！";
                                 }
@@ -347,6 +410,8 @@ public class ShowActivity extends AppCompatActivity {
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
+                                        getDataFromDb(keyWork);
+                                        setRecycleViewAdapter();
                                         toast(finalMsg);
                                     }
                                 });

@@ -3,10 +3,19 @@ package com.aaron.passwordlist.util;
 import android.content.Context;
 import android.util.Log;
 
+import com.aaron.passwordlist.Myapplication;
+import com.aaron.passwordlist.bean.PasswordBean;
+import com.aaron.passwordlist.db.dao.PwdDao;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Type;
+import java.util.List;
 
 /**
  * Created by zhrjian on 2015/11/5.
@@ -142,6 +151,55 @@ public class FileUtil {
             }
             FileStream.close();
             Ds.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    public boolean backupDatabase2jsonFile(String data, String destFilePathName) {
+        byte[] buffer = null;
+        DataOutputStream Ds = null;
+        FileOutputStream FileStream = null;
+
+        data = SymEncrypt.encrypt(data, Myapplication.getPassWord(),"AES");
+        try {
+            buffer = data.getBytes("utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        try { //创建输出流
+            FileStream = new FileOutputStream(destFilePathName, false);
+            Ds = new DataOutputStream(FileStream);
+            if (buffer != null) {
+                Ds.write(buffer);
+                Ds.flush();
+            }
+            FileStream.close();
+            Ds.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    public boolean restoteDataFromJsonFile(Context context,String surFilePathName){
+        byte[] buffer = null;
+        DataOutputStream Ds = null;
+        FileOutputStream FileStream = null;
+
+        try { //创建输入流
+            FileInputStream in = new FileInputStream(surFilePathName);
+            int length = in.available();
+            buffer = new byte[length];
+            in.read(buffer);
+            Type typeOfT = new TypeToken<List<PasswordBean>>(){}.getType();
+            String data = new String(buffer,"utf-8");
+            data = SymEncrypt.decrypt(data, Myapplication.getPassWord(),"AES");
+            List<PasswordBean> dataList = new Gson().fromJson(data,typeOfT);
+            new PwdDao(context).addPasswordMessages(dataList);
         } catch (Exception e) {
             e.printStackTrace();
             return false;

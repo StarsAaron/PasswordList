@@ -27,8 +27,8 @@ import com.aaron.passwordlist.db.dao.UserDao;
  */
 public class LoginActivity extends Activity implements View.OnClickListener {
     private Button btn_login, btn_finger;  // 按钮
-    private EditText edt_login_password;  // 密码输入框
-    private UserDao userDao = null;       // 用户信息
+    private EditText edt_login_password;   // 密码输入框
+    private UserDao userDao = null;        // 用户信息
     private Myapplication myapplication;
     private KeyboardUtil keyboardUtil;
     private LinearLayout rootView;
