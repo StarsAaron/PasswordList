@@ -13,14 +13,19 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aaron.passwordlist.Myapplication;
@@ -134,6 +139,24 @@ public class ShowActivity extends AppCompatActivity {
                 helper.setText(R.id.tv_item_tip, item.pwdTip);
                 helper.addOnClickListener(R.id.right_menu_1);
                 helper.addOnClickListener(R.id.right_menu_2);
+
+                RelativeLayout content = helper.getView(R.id.content);
+                final TextView textView = helper.getView(R.id.tv_item_tip);
+
+                content.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        switch (event.getAction()) {
+                            case MotionEvent.ACTION_DOWN:
+                                changeVisiable(textView, true);
+                                break;
+                            case MotionEvent.ACTION_UP:
+                                changeVisiable(textView, false);
+                                break;
+                        }
+                        return true;
+                    }
+                });
             }
         };
         baseQuickAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
@@ -151,6 +174,22 @@ public class ShowActivity extends AppCompatActivity {
         });
         recycleView.setAdapter(baseQuickAdapter);
         baseQuickAdapter.setEmptyView(LayoutInflater.from(this).inflate(R.layout.emptyview, null));
+    }
+
+    /**
+     * 显示或隐藏加密的内容
+     *
+     * @param view
+     * @param isVisiable
+     */
+    private void changeVisiable(TextView view, boolean isVisiable) {
+        if (isVisiable) {
+            // 显示
+            view.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+        } else {
+            // 隐藏
+            view.setTransformationMethod(PasswordTransformationMethod.getInstance());
+        }
     }
 
     @Override
@@ -290,7 +329,7 @@ public class ShowActivity extends AppCompatActivity {
                 .show();
     }
 
-    private void showDeleteItemDialog(final int position){
+    private void showDeleteItemDialog(final int position) {
         final NiftyDialogBuilder dialogBuilder = NiftyDialogBuilder.getInstance(ShowActivity.this);
         dialogBuilder
                 .withTitle("Tip")
@@ -305,13 +344,13 @@ public class ShowActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         PwdDao pwdDao = new PwdDao(ShowActivity.this);
-                        PasswordBean passwordBean = (PasswordBean)baseQuickAdapter.getItem(position);
+                        PasswordBean passwordBean = (PasswordBean) baseQuickAdapter.getItem(position);
                         int result = pwdDao.deletePasswordMessageById(passwordBean.pwdId);
-                        if(result > 0){
+                        if (result > 0) {
                             baseQuickAdapter.remove(position);
                             baseQuickAdapter.notifyDataSetChanged();
                             toast("删除成功");
-                        }else{
+                        } else {
                             toast("删除失败");
                         }
                         dialogBuilder.dismiss();
