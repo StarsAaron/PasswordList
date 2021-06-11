@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -57,6 +59,15 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 
         rootView = (LinearLayout) findViewById(R.id.rootView);
         scrollView = (ScrollView) findViewById(R.id.sv_main);
+
+
+        SharedPreferences sp = getSharedPreferences("finger-conf",Context.MODE_PRIVATE);
+        if(sp!=null) {
+            boolean isOpen = sp.getBoolean("open",false);
+            if(isOpen){
+                btn_finger.setVisibility(View.VISIBLE);
+            }
+        }
     }
 
     @Override
@@ -125,12 +136,13 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     private void saveTempData(String pass) {
         myapplication.setPassword(pass);//临时保存
         SharedPreferences sp = getSharedPreferences("msg", Context.MODE_PRIVATE);
-        sp.edit().putString("pass", pass).commit();
+        sp.edit().putString("pass", pass).apply();
     }
 
     /**
      * 显示按指纹对话框
      */
+    @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
     private void showFragmentDialog() {
         FingerDialogFragment fingerDialogFragment = new FingerDialogFragment();
         fingerDialogFragment.show(getFragmentManager(), "fingerFragment");

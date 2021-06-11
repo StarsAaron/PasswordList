@@ -65,12 +65,13 @@
                 android:id="@+id/btn_finger"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
-                android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
                 android:background="@drawable/dialog_bg"
                 android:text="指纹解锁"
-                android:textColor="#ffffff" />
+                android:textColor="#ffffff"
+                android:visibility="gone" />
 
         </LinearLayout>
     </ScrollView>

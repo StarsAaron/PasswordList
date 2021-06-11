@@ -1,6 +1,9 @@
 package com.aaron.passwordlist.ui;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -21,6 +24,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -86,7 +90,8 @@ public class ShowActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show);
-
+        // 禁止截屏功能
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
         initView();
         restoreKeyWorkFromLifeBundle(savedInstanceState);
     }
@@ -133,6 +138,7 @@ public class ShowActivity extends AppCompatActivity {
         recycleView.setLayoutManager(linearLayoutManager);
         recycleView.setItemAnimator(new DefaultItemAnimator());
         baseQuickAdapter = new BaseQuickAdapter<PasswordBean, BaseViewHolder>(R.layout.item_listview, passwordBeans) {
+            @SuppressLint("ClickableViewAccessibility")
             @Override
             protected void convert(BaseViewHolder helper, PasswordBean item) {
                 helper.setText(R.id.tv_item_account, item.pwdAccount);
@@ -140,23 +146,23 @@ public class ShowActivity extends AppCompatActivity {
                 helper.addOnClickListener(R.id.right_menu_1);
                 helper.addOnClickListener(R.id.right_menu_2);
 
-                RelativeLayout content = helper.getView(R.id.content);
-                final TextView textView = helper.getView(R.id.tv_item_tip);
+//                RelativeLayout content = helper.getView(R.id.content);
+//                final TextView textView = helper.getView(R.id.tv_item_tip);
 
-                content.setOnTouchListener(new View.OnTouchListener() {
-                    @Override
-                    public boolean onTouch(View v, MotionEvent event) {
-                        switch (event.getAction()) {
-                            case MotionEvent.ACTION_DOWN:
-                                changeVisiable(textView, true);
-                                break;
-                            case MotionEvent.ACTION_UP:
-                                changeVisiable(textView, false);
-                                break;
-                        }
-                        return true;
-                    }
-                });
+//                textView.setOnTouchListener(new View.OnTouchListener() {
+//                    @Override
+//                    public boolean onTouch(View v, MotionEvent event) {
+//                        switch (event.getAction()) {
+//                            case MotionEvent.ACTION_DOWN:
+//                                changeVisiable(textView, true);
+//                                break;
+//                            case MotionEvent.ACTION_UP:
+//                                changeVisiable(textView, false);
+//                                break;
+//                        }
+//                        return true;
+//                    }
+//                });
             }
         };
         baseQuickAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
@@ -211,6 +217,18 @@ public class ShowActivity extends AppCompatActivity {
             showSearchDialog();
         } else if (id == R.id.action_about) {
             showAppMessageDialog();
+        } else if(id == R.id.action_finger){
+            SharedPreferences sp = getSharedPreferences("finger-conf",Context.MODE_PRIVATE);
+            if(sp!=null) {
+                boolean isOpen = sp.getBoolean("open",false);
+                if(isOpen){
+                    sp.edit().putBoolean("open", false).apply();
+                    Toast.makeText(this,"关闭指纹登录",Toast.LENGTH_LONG).show();
+                }else{
+                    sp.edit().putBoolean("open", true).apply();
+                    Toast.makeText(this,"打开指纹登录",Toast.LENGTH_LONG).show();
+                }
+            }
         }
         return true;
     }

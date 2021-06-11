@@ -5,5 +5,6 @@
     <string name="menu_action_import">导入数据</string>
     <string name="menu_action_clear">清空数据</string>
     <string name="menu_action_search">查找</string>
+    <string name="menu_action_finger">关闭/打开指纹登录</string>
     <string name="menu_action_about">关于</string>
 </resources>

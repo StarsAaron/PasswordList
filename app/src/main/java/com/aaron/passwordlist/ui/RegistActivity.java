@@ -83,7 +83,7 @@ public class RegistActivity extends Activity {
 
     private void saveUserPasswordToSp(){
         SharedPreferences sp = getSharedPreferences("msg", Context.MODE_PRIVATE);
-        sp.edit().putString("pass", password).commit();
+        sp.edit().putString("pass", password).apply();
     }
 
     private void jumpToLoginActivity(){

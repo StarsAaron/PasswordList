@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,6 +19,34 @@ import com.xuelianx.fingerlib.base.BaseFingerprint;
 /**
  * 指纹提示对话框
  * Created by Aaron on 2018/3/9.
+ * <p>
+ * <p>
+ * 使用：
+ *
+ * private void showFragmentDialog() {
+ *         FingerDialogFragment fingerDialogFragment = new FingerDialogFragment();
+ *         fingerDialogFragment.show(getFragmentManager(), "fingerFragment");
+ *         fingerDialogFragment.setmFragmentCallBack(new FingerDialogFragment.Callback() {
+ *             @Override
+ *             public void onSuccess() {
+ *                 SharedPreferences sp = getSharedPreferences("msg", Context.MODE_PRIVATE);
+ *                 String pass = sp.getString("pass", "");
+ *
+ *                 if (!TextUtils.isEmpty(pass)) {
+ *                     myapplication.setPassword(pass);//临时保存
+ *                     toast("登录成功");
+ *                     jumpToMainActivity();
+ *                 } else {
+ *                     toast("获取不到本地数据，请使用密码登录");
+ *                 }
+ *             }
+ *
+ *             @Override
+ *             public void onError() {
+ *                 toast("成功");
+ *             }
+ *         });
+ *     }
  */
 public class FingerDialogFragment extends DialogFragment {
     Dialog mDialog;
